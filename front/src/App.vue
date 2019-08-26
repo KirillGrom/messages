@@ -5,23 +5,36 @@
     :class="{ 'button-change-theme--night': nightMode }"
     @click="changeThemeMode">
     </button>
-    <chatRoom/>
+  <div class="app__wrapp">
+    <transition name="fade">
+        <router-view></router-view>
+    </transition>
+  </div>
+
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import chatRoom from './components/ chatRoom/index.vue';
+import UserCreate from './components/userCreate/index.vue';
+// import Rooms from './components/Rooms/index.vue';
+import chatRoom from './components/chatRoom/index.vue';
 
 @Component({
   components: {
+
+    UserCreate,
     chatRoom,
   },
 })
 export default class App extends Vue {
   nightMode = false;
 
+  user = {}
+
   theme = 'light';
+
+  state = 'init'
 
   created(): void {
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -35,6 +48,10 @@ export default class App extends Vue {
 
   changeThemeMode(): void {
     this.nightMode = !this.nightMode;
+  }
+
+  onCreateUser() {
+    this.state = 'joinRoom';
   }
 }
 </script>
@@ -68,6 +85,11 @@ export default class App extends Vue {
 *,*::after,*::before{
   box-sizing: border-box;
 }
+img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 html,body{
   height: 100%;
   padding: 0;
@@ -80,6 +102,12 @@ html,body{
   font-family: Arial, Helvetica, sans-serif;
   flex-direction: column;
   background-color: var(--colorBack);
+}
+.app__wrapp{
+  width: 800px;
+  height: 700px;
+  margin: auto;
+  border-radius: 17px;
 }
 .button-change-theme{
   position: absolute;
@@ -111,5 +139,18 @@ html,body{
 .button-change-theme--night::before{
   transform: rotate(180deg);
   background-position: left 0% top 100%;
+}
+.door{
+  display: block;
+  width: 80px;
+  height: 75px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: left 0 top 0;
+  background-image: url('~@/assets/door2.svg');
+  cursor: pointer;
+}
+.door:hover{
+  background-position: left -80px top 0;
 }
 </style>
