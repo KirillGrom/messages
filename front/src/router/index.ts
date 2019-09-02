@@ -25,6 +25,11 @@ const routes = [
       
     }
   },
+  {
+    path:'/chat',
+    name:'Chat',
+    component: () => import('@/components/chatRoom/index.vue'),
+  }
 ];
 export default new Router({
   routes,

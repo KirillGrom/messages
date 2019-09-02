@@ -2,14 +2,14 @@
   <div class="rooms">
     <ul class="rooms__list">
       <li
-      v-for="(room, index) in roomList"
+      v-for="(room, index) in store.getRooms"
       :key="index"
       class="rooms__item">
         <a
         href="#"
         class="rooms__button"
-        @click.prevent="onJoinRoom(index)">
-          {{room.nameRomm}}
+        @click.prevent="onJoinRoom(room)">
+          {{room}}
         </a>
       </li>
       <li
@@ -20,36 +20,59 @@
           @click.prevent="onCreateRoom()">
           </a>
       </li>
+      <li>
+        <input v-model="nameRoom" type="text">
+      </li>
     </ul>
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { useStore } from "vuex-simple";
+import Socket from "../../store/socket/index";
   @Component({
     name: 'Rooms',
   })
 export default class Rooms extends Vue {
+  private store: Socket = useStore(this.$store);
 
-  roomList = [
-    {
-      nameRomm: 'Romm 1',
-    },
-    {
-      nameRomm: 'Romm 2',
-    },
-    {
-      nameRomm: 'Romm 3',
-    },
-  ]
+  private nameRoom: string= '';
 
-  onJoinRoom(indexRomms: number) {
-    console.log('Join', this.roomList[indexRomms].nameRomm);
+  created() {
+    this.getRooms();
   }
 
-  onCreateRoom(): void {
-    this.roomList
+  private goToRoom(nameRoom: string) {
+    const user = this.store.getUser;
+    user.room = nameRoom;
+    this.$socket.emit('goToRoom', user, (data) => {
+      if (data === 'string') {
+        console.error(data);
+      } else {
+        this.store.asyncSetUserId(data.userId);
+        this.store.socket_asyncSetRoomId(nameRoom);
+        this.$router.push('/chat');
+      }
+    });
+    this.$socket.emit('getRooms');
+  }
+
+  public onJoinRoom(roomName: string) {
+    if (roomName.length > 0) {
+      this.goToRoom(roomName);
+    }
+  }
+
+
+  private getRooms() {
+    this.$socket.emit('getRooms');
+  }
+
+  public onCreateRoom(): void {
+    this.goToRoom(this.nameRoom);
   }
 }
+
 
 </script>
 <style>

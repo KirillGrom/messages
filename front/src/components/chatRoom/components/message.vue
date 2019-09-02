@@ -1,13 +1,13 @@
 <template>
 <div>
-  <div :class="['message','message--'+ userMessage.type]" >
+  <div :class="['message','message--'+ userMessage.user.type]" >
     <div class="message__wrapp">
-      <span class="message__auhtor">{{userMessage.name}}</span>
-      <span class="message__text">{{userMessage.messages}}</span>
+      <span class="message__auhtor">{{userMessage.user.name}}</span>
+      <span class="message__text">{{userMessage.text}}</span>
       <span class="message__date">{{userMessage.date}}</span>
     </div>
     <div class="message__avatar">
-      <!-- <img src="~@/assets/avatar/1.svg" alt=""> -->
+      <img v-bind:src="userMessage.user.avatar" alt="">
     </div>
 
   </div>
@@ -17,6 +17,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import UserMessage from '../../../model/userMessage';
 @Component({
+  name: 'Message',
   props: {
     userMessage: {
       type: Object,
@@ -24,7 +25,7 @@ import UserMessage from '../../../model/userMessage';
   },
 })
 export default class Message extends Vue {
-
+   
 }
 </script>
 <style>
@@ -107,5 +108,15 @@ export default class Message extends Vue {
     height: 50px;
     border-radius: 50%;
     background-color: #ffffff;
+  }
+  .message--admin .message__wrapp {
+    max-width: 100%;
+    color: var(--theirMessage);
+    }
+  .message--admin .message__avatar{
+    display: none;
+  }
+  .message--admin .message__text {
+    font-size: 14px;
   }
 </style>

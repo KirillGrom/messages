@@ -2,7 +2,7 @@
     <div class="chat-room">
       <div class="chat-room__history-selectable">
         <Message
-          v-for=" (messange, index) in chartMessanges"
+          v-for=" (messange, index) in store.getMessages"
           :key="index"
           :userMessage="messange"
         />
@@ -32,38 +32,38 @@
 import { Component, Vue } from 'vue-property-decorator';
 import UserMessage from '../../model/userMessage';
 import Message from './components/message.vue';
+import { useStore } from "vuex-simple";
 
 @Component({
-  name:'ChatRoom',
+  name: 'ChatRoom',
   components: {
     Message,
   },
 })
 export default class ChatRoom extends Vue {
-  chartMessanges: object[] = [];
+  private chartMessanges: object[] = [];
 
-  textMessages: string= '';
+  private textMessages: string= '';
 
-  submitMessages(): void{
-    const newMessager = new UserMessage({
-      typeArg: 'mine',
-      nameArg: 'Kirill',
-      msgArg: this.textMessages,
-      dateArg: '3.04pm',
-    });
-    const newMessager2 = new UserMessage({
-      typeArg: 'frinds',
-      nameArg: 'Kirill',
-      msgArg: this.textMessages,
-      dateArg: '3.05pm',
-    });
-    this.chartMessanges.push(newMessager, newMessager2);
-    this.textMessages = '';
+  private store: Socket = useStore(this.$store);
+
+  submitMessages(): void {
+    if (this.textMessages.length > 0) {
+      const message = {
+        text: this.textMessages,
+        date: '',
+      };
+      const user = this.store.getUser;
+      this.$socket.emit('newMessage', new UserMessage(message, user), (data) => {
+        if (data === 'string') {
+          console.error(data);
+        } else {
+          this.textMessages = '';
+          this.store.socket_asyncNewMessage(data);
+        }
+      });
+    }
   }
-
-  userMessage = new UserMessage({
-
-  })
 }
 </script>
 <style>
