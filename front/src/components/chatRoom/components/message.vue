@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div :class="['message','message--'+ userMessage.user.type]" >
+  <div :class="['message','message--'+ userMessage.type]" >
     <div class="message__wrapp">
       <span class="message__auhtor">{{userMessage.user.name}}</span>
       <span class="message__text">{{userMessage.text}}</span>

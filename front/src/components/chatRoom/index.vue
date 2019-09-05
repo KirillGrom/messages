@@ -52,14 +52,16 @@ export default class ChatRoom extends Vue {
       const message = {
         text: this.textMessages,
         date: '',
+        type: 'mine',
       };
       const user = this.store.getUser;
-      this.$socket.emit('newMessage', new UserMessage(message, user), (data) => {
+      const sendMessage = new UserMessage(message, user).changeType('frinds');
+      this.$socket.emit('newMessage', sendMessage, (data) => {
         if (data === 'string') {
           console.error(data);
         } else {
           this.textMessages = '';
-          this.store.socket_asyncNewMessage(data);
+          this.store.socket_asyncNewMessage(new UserMessage(message, user));
         }
       });
     }
