@@ -50,7 +50,7 @@ export default class Rooms extends Vue {
         console.error(data);
       } else {
         this.store.asyncSetUserId(data.userId);
-        this.store.socket_asyncSetRoom(nameRoom);
+        this.store.socket_asyncSetRoomId(nameRoom);
         this.$router.push('/chat');
       }
     });
